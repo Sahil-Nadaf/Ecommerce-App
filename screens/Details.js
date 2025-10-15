@@ -9,15 +9,14 @@ import {
 import { useEffect, useState } from "react";
 import {
   Alert,
-  Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { ImageCarousel } from "../components/ImageCarousel";
 import { db } from "../firestore/firebaseConfig";
 
 export const Details = ({ route, navigation }) => {
@@ -122,7 +121,7 @@ export const Details = ({ route, navigation }) => {
           <Ionicons name="pencil" size={25} />
         </TouchableOpacity>
       </View>
-      <ScrollView
+      {/* <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: 10 }}
@@ -137,7 +136,8 @@ export const Details = ({ route, navigation }) => {
             />
           );
         })}
-      </ScrollView>
+      </ScrollView> */}
+      <ImageCarousel images={editedProduct.images} />
       <Text style={styles.text}>Name: {editedProduct.name}</Text>
       <Text style={styles.text}>ID: {product.pid}</Text>
       <Text style={styles.text}>Category: {editedProduct.category}</Text>
