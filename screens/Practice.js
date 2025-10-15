@@ -168,30 +168,22 @@ export const AddCategories = ({ categories, setCategories }) => {
   ];
   return (
     <View style={styles.addcontainer}>
-      <Text style={styles.header}>Categories</Text>
-      {/* <UserInput
-        label="Categories"
-        placeholder="Enter categories (e.g. Fiction, Science)"
-        value={categories}
-        onChangeText={setCategories}
-      /> */}
-      {categories.length === 0 ? (
+      <Text style={styles.header}>Category</Text>
+      {!category? (
         <TouchableOpacity
           style={styles.button}
           onPress={() => setCategoryModalVisible(true)}
         >
-          <Text style={{ color: "#fff" }}>Select Categories</Text>
+          <Text style={{ color: "#fff" }}>Select Category</Text>
         </TouchableOpacity>
       ) : (
         <View>
-          {categories.map((category) => {
-            return <Text>{category}</Text>;
-          })}
+          <Text>{category}</Text>
           <TouchableOpacity
             style={styles.button}
             onPress={() => setCategoryModalVisible(true)}
           >
-            <Text style={{ color: "#fff" }}>Select Categories</Text>
+            <Text style={{ color: "#fff" }}>Select Category</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -208,8 +200,7 @@ export const AddCategories = ({ categories, setCategories }) => {
         >
           <View style={styles.modalContent}>
             <Text style={styles.modalHeader}>Select Category</Text>
-            {categoryOptions.map((category) => {
-              const isSelected = categories.includes(category);
+            {categories.map((category) => {
               return (
                 <TouchableOpacity
                   key={category}
@@ -241,3 +232,33 @@ export const AddCategories = ({ categories, setCategories }) => {
     </View>
   );
 };
+
+
+
+
+// addcontainer: {
+//     gap: 10,
+//   },
+//   header: {
+//     color: "#6b3131ff",
+//   },
+//   button: {
+//     alignItems: "center",
+//     justifyContent: "center",
+//     backgroundColor: "#0c6977ff",
+//     borderRadius: 10,
+//     padding: 10,
+//   },
+//   modalOverlay: {
+//     flex: 1,
+//     backgroundColor: "rgba(0,0,0,0.3)",
+//     justifyContent: "flex-end",
+//   },
+//   modalContent: {
+//     backgroundColor: "white",
+//     padding: 20,
+//     borderTopLeftRadius: 15,
+//     borderTopRightRadius: 15,
+//   },
+//   modalHeader: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
+//   categoryItem: { padding: 12, borderRadius: 8, marginBottom: 10 },

@@ -55,7 +55,6 @@ export const AddProduct = ({ navigation, route }) => {
           });
         })
       );
-
       setBase64Images((prev) => [...prev, ...base64Array]);
       // console.log(base64Images);
     }

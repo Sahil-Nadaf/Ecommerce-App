@@ -54,7 +54,7 @@ export const EditProduct = ({ navigation, route }) => {
       setName(editingProduct.name)
       setCategory(editingProduct.category)
       setPrice(editingProduct.price)
-      console.log("price",editingProduct.price);
+      // console.log("price",editingProduct.price);
       setBrand(editingProduct.brand)
       // setEditingProductImages(editingProduct.images)
       setCombinedImages(editingProduct.images);
