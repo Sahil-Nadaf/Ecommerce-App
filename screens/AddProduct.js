@@ -6,6 +6,7 @@ import {
   Alert,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,8 +21,21 @@ export const AddProduct = ({ navigation, route }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [brand, setBrand] = useState("");
   // const [images, setImages] = useState([]);
   const [base64Images, setBase64Images] = useState([]);
+  const [filterVisible, setFilterVisible] = useState(false);
+
+  const categories = [
+    "Fashion",
+    "Mobile",
+    "Electronics",
+    "Appliances",
+    "Beauty and Personal care",
+    "Sports",
+    "Home",
+    "Smart Gadgets",
+  ];
 
   const pickFromGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -39,14 +53,11 @@ export const AddProduct = ({ navigation, route }) => {
           return await FileSystem.readAsStringAsync(asset.uri, {
             encoding: "base64",
           });
-          
-          
         })
       );
 
       setBase64Images((prev) => [...prev, ...base64Array]);
       // console.log(base64Images);
-      
     }
   };
   const pickFromCamera = async () => {
@@ -84,7 +95,8 @@ export const AddProduct = ({ navigation, route }) => {
       const newProduct = {
         name,
         category,
-        price,
+        price: Number(price),
+        brand,
         images: base64Images,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -93,7 +105,7 @@ export const AddProduct = ({ navigation, route }) => {
       setName("");
       setCategory("");
       setPrice("");
-      // setImages([]);
+      setBrand("");
       setBase64Images([]);
       navigation.goBack();
     } catch (e) {
@@ -103,7 +115,7 @@ export const AddProduct = ({ navigation, route }) => {
   };
 
   const handleAddProduct = () => {
-    if (!name || !category || !price || !base64Images) {
+    if (!name || !category || !price || !base64Images || !brand) {
       Alert.alert("Please fill all fields");
       return;
     }
@@ -114,7 +126,9 @@ export const AddProduct = ({ navigation, route }) => {
   };
 
   const dataWithPadding =
-    base64Images.length % 2 === 0 ? base64Images : [...base64Images, { empty:true }];
+    base64Images.length % 2 === 0
+      ? base64Images
+      : [...base64Images, { empty: true }];
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
@@ -132,13 +146,7 @@ export const AddProduct = ({ navigation, route }) => {
           onChangeText={setName}
           keyboardType="default"
         />
-        <UserInput
-          placeholder="Enter product category"
-          label="Product category"
-          value={category}
-          onChangeText={setCategory}
-          keyboardType="default"
-        />
+
         <UserInput
           placeholder="Enter product price"
           label="Product price"
@@ -146,69 +154,157 @@ export const AddProduct = ({ navigation, route }) => {
           onChangeText={setPrice}
           keyboardType="numeric"
         />
-      
 
-      <View style={styles.imagecontainer}>
-        <View>
-          <Text style={styles.imagetitle}>Select product cover images</Text>
-          {base64Images.length > 0 && (
+        <UserInput
+          placeholder="Enter product brand"
+          label="Product brand"
+          value={brand}
+          onChangeText={setBrand}
+          keyboardType="default"
+        />
+
+        <Text>Product category</Text>
+        {!category ? (
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#0c6977ff",
+              borderRadius: 10,
+              padding: 10,
+            }}
+            onPress={() => setFilterVisible(true)}
+          >
+            <Text style={{ color: "#fff" }}>Select Category</Text>
+          </TouchableOpacity>
+        ) : (
+          <View>
+            <Text>{category}</Text>
             <TouchableOpacity
-              style={{ alignItems: "flex-end" }}
-              onPress={addImage}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#0c6977ff",
+                borderRadius: 10,
+                padding: 10,
+              }}
+              onPress={() => setFilterVisible(true)}
             >
-              <Ionicons name="add-circle-outline" size={35} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {base64Images.length === 0 ? (
-          <View style={styles.card}>
-            <TouchableOpacity style={styles.option} onPress={pickFromCamera}>
-              <Ionicons name="camera-outline" size={40} color="#f4b400" />
-              <Text style={styles.label}>Camera</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.option} onPress={pickFromGallery}>
-              <Ionicons name="image-outline" size={40} color="#00bcd4" />
-              <Text style={styles.label}>Gallery</Text>
+              <Text style={{ color: "#fff" }}>Select Category</Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          <FlatList
-            data={dataWithPadding}
-            numColumns={2}
-            columnWrapperStyle={{ gap: 10 }}
-            contentContainerStyle={styles.contentContainerStyle}
-            showsVerticalScrollIndicator={false}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="handled"
-            renderItem={({ item, index }) => {
-              // if (item.empty){
-              //   return(
-              //     <View style={{flex:1}}></View>
-              //   )
+        )}
 
-              // }
-              const handleRemoveImage = () => {
-                // setImages(images.filter((_, i) => i !== index));
-                setBase64Images(base64Images.filter((_, i) => i !== index));
-              };
-
-              if(item.empty){
-                  return <View style={styles.imageview}></View>;
-              }
-
-              return (
-                <View style={[styles.imageview,{backgroundColor:"#ffff"}]}>
-                  <Image
-                    source={{ uri: `data:image/jpeg;base64,${item}` }}
-                    style={{
-                      flex: 1,
-                      width: "100%",
-                      resizeMode: "stretch",
-                      borderRadius: 10,
+        <Modal
+          visible={filterVisible}
+          transparent
+          onRequestClose={() => {
+            setFilterVisible(false);
+          }}
+          animationType="slide"
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            onPress={() => setFilterVisible(false)}
+            activeOpacity={1}
+          >
+            <View style={styles.modalContent}>
+              <Text style={styles.modalHeader}>Select category</Text>
+              <>
+                {categories.map((cat) => (
+                  <TouchableOpacity
+                    key={cat}
+                    style={[
+                      styles.categoryItem,
+                      category === cat && {
+                        backgroundColor: "#b8d4c3ff",
+                      },
+                    ]}
+                    onPress={() => {
+                      setCategory(cat);
+                      setFilterVisible(false);
                     }}
-                  />
-                  
+                  >
+                    <Text>{cat}</Text>
+                  </TouchableOpacity>
+                ))}
+              </>
+              <TouchableOpacity
+                style={[styles.categoryItem, { backgroundColor: "#eee" }]}
+                onPress={() => {
+                  setCategory("");
+                  setFilterVisible(false);
+                }}
+              >
+                <Text>Clear category</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        <View style={styles.imagecontainer}>
+          <View>
+            <Text style={styles.imagetitle}>Select product cover images</Text>
+            {base64Images.length > 0 && (
+              <TouchableOpacity
+                style={{ alignItems: "flex-end" }}
+                onPress={addImage}
+              >
+                <Ionicons name="add-circle-outline" size={35} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {base64Images.length === 0 ? (
+            <View style={styles.card}>
+              <TouchableOpacity style={styles.option} onPress={pickFromCamera}>
+                <Ionicons name="camera-outline" size={40} color="#f4b400" />
+                <Text style={styles.label}>Camera</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.option} onPress={pickFromGallery}>
+                <Ionicons name="image-outline" size={40} color="#00bcd4" />
+                <Text style={styles.label}>Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <FlatList
+              data={dataWithPadding}
+              numColumns={2}
+              columnWrapperStyle={{ gap: 10 }}
+              contentContainerStyle={styles.contentContainerStyle}
+              showsVerticalScrollIndicator={false}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="handled"
+              renderItem={({ item, index }) => {
+                // if (item.empty){
+                //   return(
+                //     <View style={{flex:1}}></View>
+                //   )
+
+                // }
+                const handleRemoveImage = () => {
+                  // setImages(images.filter((_, i) => i !== index));
+                  setBase64Images(base64Images.filter((_, i) => i !== index));
+                };
+
+                if (item.empty) {
+                  return <View style={styles.imageview}></View>;
+                }
+
+                return (
+                  <View
+                    style={[styles.imageview, { backgroundColor: "#ffff" }]}
+                  >
+                    <Image
+                      source={{ uri: `data:image/jpeg;base64,${item}` }}
+                      style={{
+                        flex: 1,
+                        width: "100%",
+                        resizeMode: "stretch",
+                        borderRadius: 10,
+                      }}
+                    />
+
                     <TouchableOpacity
                       onPress={handleRemoveImage}
                       style={{
@@ -223,13 +319,12 @@ export const AddProduct = ({ navigation, route }) => {
                     >
                       <Ionicons name="close-circle" size={20} color="#fff" />
                     </TouchableOpacity>
-                 
-                </View>
-              );
-            }}
-          />
-        )}
-      </View>
+                  </View>
+                );
+              }}
+            />
+          )}
+        </View>
       </View>
       {/* {image && (
           <TouchableOpacity
@@ -302,4 +397,17 @@ const styles = StyleSheet.create({
     padding: 5,
     overflow: "hidden",
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  modalHeader: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
+  categoryItem: { padding: 12, borderRadius: 8, marginBottom: 10 },
 });

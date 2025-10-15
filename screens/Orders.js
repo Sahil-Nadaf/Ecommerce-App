@@ -35,6 +35,7 @@ export const Orders = ({navigation}) => {
       <View style={{ marginLeft: 10, flex: 1 }}>
         <Text style={styles.text}>Name:{item.name}</Text>
         <Text style={styles.text}>Price:₹{item.price*item.quantity}</Text>
+        <Text style={styles.text}>Brand:{item.brand}</Text>
         <Text style={styles.text}>ProductId:{item.opid}</Text>
         <Text style={styles.text}>Category:{item.category}</Text>
         <Text style={styles.text}>Quantity:{item.quantity}</Text>

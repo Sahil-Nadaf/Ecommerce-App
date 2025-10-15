@@ -116,7 +116,8 @@ export const Cart = ({ navigation }) => {
         await addDoc(collection(db, "orders"),{
           name:item.name,
           category:item.category,
-          price:item.price,
+          price:Number(item.price),
+          brand:item.brand,
           images:item.images,
           createdAt:serverTimestamp(),
           pid:item.pid,
@@ -157,6 +158,7 @@ export const Cart = ({ navigation }) => {
       <View style={{ marginLeft: 10, flex: 1 }}>
         <Text style={styles.text}>Name:{item.name}</Text>
         <Text style={styles.text}>Price:₹{item.price*item.quantity}</Text>
+        <Text style={styles.text}>Brand:{item.brand}</Text>
         <Text style={styles.text}>ProductId:{item.pid}</Text>
         <Text style={styles.text}>Category:₹{item.category}</Text>
         <Text style={styles.text}>Quantity:{item.quantity}</Text>

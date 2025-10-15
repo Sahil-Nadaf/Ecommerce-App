@@ -13,6 +13,9 @@ export const ProductCard = ({ item, onPress }) => {
       <Text style={styles.booktext} numberOfLines={1}>
         ₹{item.price}
       </Text>
+      <Text style={styles.booktext} numberOfLines={1}>
+        {item.brand}
+      </Text>
     </TouchableOpacity>
   );
 };

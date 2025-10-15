@@ -48,10 +48,11 @@ export const Details = ({ route, navigation }) => {
       await addDoc(collection(db, "cart"), {
         name: editedProduct.name,
         category: editedProduct.category,
-        price: editedProduct.price,
+        price: Number(editedProduct.price),
         images: editedProduct.images,
         createdAt: serverTimestamp(),
         pid: product.pid,
+        brand:editedProduct.brand,
       });
       setInCart(true);
       navigation.navigate("MainTabs", { screen: "Cart" });
@@ -77,11 +78,12 @@ export const Details = ({ route, navigation }) => {
       await addDoc(collection(db, "orders"), {
         name: editedProduct.name,
         category: editedProduct.category,
-        price: editedProduct.price,
+        price: Number(editedProduct.price),
         images: editedProduct.images,
         createdAt: serverTimestamp(),
         pid: product.pid,
         quantity:1,
+        brand:editedProduct.brand,
       });
       setInOrders(true);
       navigation.navigate("MainTabs", { screen: "My Orders" });
@@ -140,6 +142,7 @@ export const Details = ({ route, navigation }) => {
       <Text style={styles.text}>ID: {product.pid}</Text>
       <Text style={styles.text}>Category: {editedProduct.category}</Text>
       <Text style={styles.text}>Price: ₹{editedProduct.price}</Text>
+      <Text style={styles.text}>Brand: {editedProduct.brand}</Text>
       <View style={{flexDirection:"row", position: "absolute",bottom: 20,right: 10,left: 10,}}>
       <TouchableOpacity
         style={[

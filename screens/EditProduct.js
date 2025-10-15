@@ -15,10 +15,11 @@ import {
   Alert,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -29,18 +30,32 @@ export const EditProduct = ({ navigation, route }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [brand, setBrand]=useState("")
   // const [images, setImages]=useState([])  //local images
   // const [editingProductImages, setEditingProductImages]=useState([]) //base64Images
   const [combinedImages, setCombinedImages] = useState([]); // images + editingProductImages
   // const [base64Images,setBase64Images]=useState([])
-
+  const [filterVisible, setFilterVisible] = useState(false);
   const editingProduct = route.params?.product;
+
+  const categories = [
+    "Fashion",
+    "Mobile",
+    "Electronics",
+    "Appliances",
+    "Beauty and Personal care",
+    "Sports",
+    "Home",
+    "Smart Gadgets",
+  ];
 
   useEffect(() => {
     if (editingProduct) {
-      setName(editingProduct.name);
-      setCategory(editingProduct.category);
-      setPrice(editingProduct.price);
+      setName(editingProduct.name)
+      setCategory(editingProduct.category)
+      setPrice(editingProduct.price)
+      console.log("price",editingProduct.price);
+      setBrand(editingProduct.brand)
       // setEditingProductImages(editingProduct.images)
       setCombinedImages(editingProduct.images);
       // setBase64Images(editingProduct.images)
@@ -107,7 +122,8 @@ export const EditProduct = ({ navigation, route }) => {
         createdAt: editingProduct.createdAt,
         name,
         category,
-        price,
+        price:Number(price),
+        brand,
         images: combinedImages,
         updatedAt: serverTimestamp(),
       };
@@ -123,7 +139,8 @@ export const EditProduct = ({ navigation, route }) => {
         updateDoc(doc(db, "cart", d.id), {
           name,
           category,
-          price,
+          price:Number(price),
+          brand,
           images: combinedImages,
         })
       );
@@ -131,6 +148,7 @@ export const EditProduct = ({ navigation, route }) => {
       setName("");
       setCategory("");
       setPrice("");
+      setBrand("")
       setCombinedImages([]);
       if (route.params?.onSave) {
         route.params.onSave(updatedProduct);
@@ -222,20 +240,102 @@ export const EditProduct = ({ navigation, route }) => {
           onChangeText={setName}
           keyboardType="default"
         />
-        <UserInput
-          placeholder="Enter product category"
-          label="Product category"
-          value={category}
-          onChangeText={setCategory}
-          keyboardType="default"
-        />
+
         <UserInput
           placeholder="Enter product price"
           label="Product price"
-          value={price}
+          value={price.toString()}
           onChangeText={setPrice}
           keyboardType="numeric"
         />
+
+        <UserInput
+          placeholder="Enter product brand"
+          label="Product brand"
+          value={brand}
+          onChangeText={setBrand}
+          keyboardType="default"
+        />
+
+        <Text>Product category</Text>
+                {!category ? (
+                  <TouchableOpacity
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#0c6977ff",
+                      borderRadius: 10,
+                      padding: 10,
+                    }}
+                    onPress={() => setFilterVisible(true)}
+                  >
+                    <Text style={{ color: "#fff" }}>Select Category</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View>
+                    <Text>{category}</Text>
+                    <TouchableOpacity
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#0c6977ff",
+                        borderRadius: 10,
+                        padding: 10,
+                      }}
+                      onPress={() => setFilterVisible(true)}
+                    >
+                      <Text style={{ color: "#fff" }}>Select Category</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+        
+                <Modal
+                  visible={filterVisible}
+                  transparent
+                  onRequestClose={() => {
+                    setFilterVisible(false);
+                  }}
+                  animationType="slide"
+                >
+                  <TouchableOpacity
+                    style={styles.modalOverlay}
+                    onPress={() => setFilterVisible(false)}
+                    activeOpacity={1}
+                  >
+                    <View style={styles.modalContent}>
+                      <Text style={styles.modalHeader}>Select category</Text>
+                      <>
+                        {categories.map((cat) => (
+                          <TouchableOpacity
+                            key={cat}
+                            style={[
+                              styles.categoryItem,
+                              category === cat && {
+                                backgroundColor: "#b8d4c3ff",
+                              },
+                            ]}
+                            onPress={() => {
+                              setCategory(cat);
+                              setFilterVisible(false);
+                            }}
+                          >
+                            <Text>{cat}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </>
+                      <TouchableOpacity
+                        style={[styles.categoryItem, { backgroundColor: "#eee" }]}
+                        onPress={() => {
+                          setCategory("");
+                          setFilterVisible(false);
+                        }}
+                      >
+                        <Text>Clear category</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                </Modal>
+
 
         <View style={styles.imagecontainer}>
           <View>
@@ -391,4 +491,17 @@ const styles = StyleSheet.create({
     padding: 5,
     overflow: "hidden",
   },
+   modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  modalHeader: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
+  categoryItem: { padding: 12, borderRadius: 8, marginBottom: 10 },
 });
