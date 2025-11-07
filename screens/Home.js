@@ -356,6 +356,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#fff",
     borderRadius: 10,
+    paddingVertical:7,
   },
   input: { flex: 1 },
   box: {

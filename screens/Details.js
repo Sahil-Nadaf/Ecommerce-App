@@ -1,3 +1,4 @@
+import * as Notifications from "expo-notifications";
 import {
   addDoc,
   collection,
@@ -12,11 +13,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ImageCarousel } from "../components/ImageCarousel";
+import MyToast from "../components/MyToast";
 import { db } from "../firestore/firebaseConfig";
 
 export const Details = ({ route, navigation }) => {
@@ -55,6 +57,16 @@ export const Details = ({ route, navigation }) => {
       });
       setInCart(true);
       navigation.navigate("MainTabs", { screen: "Cart" });
+      
+      await Notifications.scheduleNotificationAsync({
+        content:{
+          title:"Added to Cart",
+          body:`${editedProduct.name} (id:${product.pid}) has been added to cart successfully`,
+          data:{pid:product.pid}
+        },
+        trigger:null,
+      })
+      MyToast.showToast(`${editedProduct.name} (id:${product.pid}) has been added to cart successfully`)
     } catch (e) {
       console.log(e);
       Alert.alert("Error adding to cart");
@@ -86,6 +98,14 @@ export const Details = ({ route, navigation }) => {
       });
       setInOrders(true);
       navigation.navigate("MainTabs", { screen: "My Orders" });
+      await Notifications.scheduleNotificationAsync({
+        content:{
+          title:"Order placed successfully",
+          body:`${editedProduct.name} (id:${product.pid}) has been ordered successfully`,
+          data:{pid:product.pid}
+        },
+        trigger:null,
+      })
     } catch (e) {
       console.log(e);
       Alert.alert("Error adding to cart");

@@ -64,10 +64,15 @@
 
 import { useState } from "react";
 import {
+  FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from "react-native";
@@ -79,6 +84,7 @@ import { Categories } from "../components/Categories";
 import { Description } from "../components/Description";
 import { SaleInfo } from "../components/SaleInfo";
 import { VolumeInfo } from "../components/VolumeInfo";
+import { BottomTabBar } from "@react-navigation/bottom-tabs";
 
 export const BookDetails = ({ navigation, route }) => {
   const book = route.params?.book;
@@ -234,6 +240,40 @@ export const AddCategories = ({ categories, setCategories }) => {
 };
 
 
+<View>
+  <Text>
+    <TouchableOpacity>
+      <FlatList>
+        <ScrollView>
+          <Modal>
+            <TextInput>
+              <Ionicons>
+                <SafeAreaView>
+                  <TabView>
+                    <TabBar>
+                      <Stacknavigator>
+                        <BottomTabBar>
+                          <Drawer>
+                            <TouchableHighlight>
+                              <TouchableWithoutFeedback>
+                                
+                              </TouchableWithoutFeedback>
+                            </TouchableHighlight>
+                          </Drawer>
+                        </BottomTabBar>
+                      </Stacknavigator>
+                    </TabBar>
+                  </TabView>
+                </SafeAreaView>
+              </Ionicons>
+            </TextInput>
+          </Modal>
+        </ScrollView>
+      </FlatList>
+    </TouchableOpacity>
+  </Text>
+</View>
+
 
 
 // addcontainer: {
@@ -251,8 +291,8 @@ export const AddCategories = ({ categories, setCategories }) => {
 //   },
 //   modalOverlay: {
 //     flex: 1,
-//     backgroundColor: "rgba(0,0,0,0.3)",
-//     justifyContent: "flex-end",
+//     backgroundColor: "rgba(0,0,0,0.3)",dud hfygyfs hsdyyhdvycyvv cygegvcyej
+//     justifyContent: "flex-end",sahil nh nadafhv gyeghvcyg hbdyyyge 72t787783. 
 //   },
 //   modalContent: {
 //     backgroundColor: "white",
@@ -261,4 +301,7 @@ export const AddCategories = ({ categories, setCategories }) => {
 //     borderTopRightRadius: 15,
 //   },
 //   modalHeader: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
+
+
+//vhdsguy ugjbkf[]i heyg hOUeh":'{]eoihe jsSDUJrughur uegdugc euguygegu hiegiygigu ehyyureuyryrw bwyeygr hbwi fdjrufg hegeyr yheygy ahvy aywe esahikhds63275{}:">??<ZCXyvyxXVHgygggygeusagshailhsanababssusasghdyetteggfgfggf wehwfhwf hefhf hvfhvgewgryy2664ygdyde evguegduygudg"}
 //   categoryItem: { padding: 12, borderRadius: 8, marginBottom: 10 },
